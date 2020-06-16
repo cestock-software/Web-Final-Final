@@ -1,0 +1,604 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet"  href="{% static 'alert/sweetalert2.min.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet"  href="{% static 'css/main/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://kit.fontawesome.com/f89beaec9d.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <style type="text/css">
+       .footer_position{
+            position:fixed;
+            left:0px;
+            bottom:0px;
+            height:50px;
+            width:100%;
+         }
+         #container {
+             height: 400px;
+         }
+         .order-form .container {
+          color: #4c4c4c;
+          padding: 20px;
+          box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+        }
+    </style>
+    {% block css %}
+    {% endblock css %}
+   
+
+    <title> {% block titulo %}Menu{% endblock titulo %}</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #17a2b8!important;">
+        <a class="navbar-brand" href="{% url 'Cestock:PaginaPrincipal' %}">CESTOCK</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="true" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarColor03" style="background-color: #17a2b8!important;">
+          <ul class="navbar-nav mr-auto">
+            {% if user.is_staff %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:crear_doctor' %}">Registrar Usuarios</a>
+              </li>
+     
+               <li class="nav-item">
+                 <a class="nav-link" href="{% url 'users:lista_users' %}">Lista Usuarios</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:lista_users2' %}">Lista Usuarios Inactivos</a>
+             </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'Cestock:ListaPacientes' %}">Pacientes</a>
+            </li>
+   
+             <li class="nav-item">
+              <a class="nav-link" href="{% url 'Cestock:StockMedicamento' %}">Stock Medicamentos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'Cestock:AtencionMedica' %}">Crear Atención</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'Cestock:ListaAtenciones' %}">Historial Atenciones</a>
+              </li>
+              {% endif %}
+          </ul>
+
+          <ul class=" navbar-nav navbar-right">
+
+            <li class="dropdown nav-item">
+
+            
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}}</a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Cestock:PaginaPrincipal' %}">Home</a></li>
+                
+
+                <li role="separator" class="divider"></li>
+
+                
+                <li class="nav-item"><a class="nav-link" href="{% url 'users:editar_doctor' request.user.id %}">Editar Perfil</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'users:password_update' %}">Editar Contraseña</a></li>
+   
+                <li role="separator" class="divider"></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Cestock:logoutt' %}">Salir</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+
+      {% block Pagina %}
+      <style type="text/css">
+        .con_white{
+           background-color: #fefefe;
+         }
+       .highcharts-figure, .highcharts-data-table table {
+         min-width: 310px;
+         max-width: 800px;
+         margin: 1em auto;
+         }
+
+
+
+         .highcharts-data-table table {
+           font-family: Verdana, sans-serif;
+           border-collapse: collapse;
+           border: 1px solid #EBEBEB;
+           margin: 10px auto;
+           text-align: center;
+           width: 100%;
+           max-width: 500px;
+         }
+         .highcharts-data-table caption {
+             padding: 1em 0;
+             font-size: 1.2em;
+             color: #555;
+         }
+         .highcharts-data-table th {
+           font-weight: 600;
+             padding: 0.5em;
+         }
+         .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+             padding: 0.5em;
+         }
+         .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+             background: #f8f8f8;
+         }
+         .highcharts-data-table tr:hover {
+             background: #f1f7ff;
+         }
+
+
+     </style>
+     <section  class="order-form my-4 mx-4">
+       <div class="container con_white pt-4 rounded-lg" >
+           <div class="row">
+
+               <div class="col-12">
+                 <h3>Atenciones médicas realizadas</h3>
+                 <span>Atenciones medicas realizadas en la presente semana</span>
+                 <hr class="mt-1">
+               </div>
+               <div class="col-12">
+                   <div class="col-md">
+                      <div class="row mx-4">
+                           {% if ultimas_atenciones_medicas %}
+                             <div class="col-12 col-sm-6">
+                                 <h4>Últimas atenciones médicas</h4>
+                                   <hr class="mt-1">
+                                   {% for atencion in ultimas_atenciones_medicas %}
+                                          <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#modal_atencion" onclick="ver_atencion( {{atencion.id}} )">
+                                             <div class="md-v-line"></div> Atención médica N°{{atencion.id}}, Ficha N°{{atencion.nro_ficha}}, Doctor {{atencion.nombre_medico}}
+                                             <br><small>{{atencion.fecha_atencion_medica}} </small>
+                                         </a >
+                                   {% endfor %}
+                             </div>
+                             <div class="col-12 col-sm-6">
+                               <figure class="highcharts-figure">
+                                   <!--El grafico va en este contenedor-->
+                                   <div id="container"></div>
+                               </figure>
+                             </div>
+                           {% else %}
+                            <div class="col-12 col-sm-6">
+                              <h4>Últimas atenciones médicas</h4>
+                              <hr class="mt-1">
+
+                             No se registran atenciones médicas
+                            </div>
+                           {% endif %}
+                       </div>
+                   </div>
+               </div>
+           </div>
+         <br>
+         <br>
+       </div>
+       <div class="modal fade" id="modal_atencion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <!--<h5 class="modal-title font-weight-bold" id="exampleModalLabel">Detalle de la Factura</h5>-->
+                      <h5 class="h5 text-uppercase font-weight-bold mb-0">Atención médica nº <span id="id"></span></h5>
+                      <button class="close close_class" type="button" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="card mb-4">
+                          <div class="card-body p-0">
+                              <table class="table table__with-buttons">
+                                  <thead>
+                                      <tr>
+                                          <th class="w-35">Doctor</th>
+                                          <th class="text-left">Ficha</th>
+                                          <th class="text-left">Fecha</th>
+                                          <th class="text-left">Paciente</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td>
+                                              <span id="doctor"></span>
+                                          </td>
+                                          <td class="text-left">
+                                              <span id="ficha"></span>
+                                          </td>
+                                          <td class="text-left">
+                                              <span id="fecha"></span>
+                                          </td>
+                                          <td class="text-left">
+                                              <span id="paciente"></span>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <div class="card mb-0">
+                          <div class="card-header">
+                              <h6 class="h6 font-weight-bold mb-0">
+                                  Detalle
+                              </h6>
+                          </div>
+                          <div class="card-body p-0">
+                              <table class="table header-fixed">
+                                  <tbody><!-- style="overflow: auto; height: 100px" -->
+                                      <!-- OS 1 -->
+                                      <tr>
+                                          <td class="font-weight-bold w-15">Síntomas</td>
+                                          <td class="w-40">
+                                              <p id="sintomas"></p>
+                                          </td>
+                                      </tr>
+                                      <!-- OS 2 -->
+                                      <tr>
+                                          <td class="font-weight-bold w-15">Diagnóstico</td>
+                                          <td class="w-40">
+                                              <p id="diagnostico"></p>
+                                          </td>
+                                      </tr>
+                                      <!-- OS 3 -->
+                                      <tr>
+                                          <td class="font-weight-bold w-15">Tratamiento</td>
+                                          <td class="w-40">
+                                              <p id="tratamiento"></p>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td class="font-weight-bold w-15">Observación</td>
+                                          <td class="w-40">
+                                              <p id="observacion"></p>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-info close_class" type="button" data-dismiss="modal">Atras</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+     </section>
+     
+      {% endblock Pagina %}
+<br>
+<br>
+          <!-- Footer -->
+          {% comment %} <footer class="page-footer footer_position font-small" style="background-color: #17a2b8!important; ">
+            <div class="container">
+              <div class="row">
+              </div>
+            </div>
+            <div class="footer-copyright text-center py-3">© 2020 Copyright:
+              <a style="color: white" href="#"> Cestock.com</a>
+            </div>
+
+          </footer> {% endcomment %}
+          <!-- Footer -->
+
+        
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'alert/sweetalert2.all.min.js' %}"></script>
+        <script src="{% static 'js/main/main.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+       
+       <script>
+        if ($(".valida-rut").val() !== ""){
+            if ($(".valida-rut").val() != null) {
+                var new_format = formatRut($(".valida-rut").val())
+                $(".valida-rut").val(new_format)
+            }
+        }
+
+        $(".valida-rut").blur(function(){
+            validate_blur_rut(this);
+        });
+
+        function validate_blur_rut(element){
+            if ($(element).val() == "")
+                return false;
+
+            var new_format = formatRut($(element).val())
+
+           if (Fn.validaRut( new_format )){
+
+                $(element).val(new_format)
+                // validar que ningun rut ya exista en el sistema al agregarlo en el campo
+                var rut_sistema = new_format;
+                var rut_last_part = rut.split('.')[2]
+                var rut_sin_identificador = rut_sistema.split('.')[0] + '' + rut_sistema.split('.')[1] + '' + rut_last_part.split('-')[0]
+                var rut_identificador = rut.split('-')[1]
+
+                var rut_sistema_sin_formato = rut_sin_identificador + '' + rut_identificador
+
+                var rut = rut_sistema_sin_formato
+                var rut_editado = '{{form.instance.rut}}'
+                console.log(rut_editado);
+                if (rut_editado != rut ){
+
+                  $.ajax({
+                      type: "POST",
+                      url: "{% url 'Cestock:validar_rut'%}",
+                      data: {
+                          csrfmiddlewaretoken: '{{ csrf_token }}',
+                          'rut': rut
+                      },
+                      success: function (data, status) {
+                          if (data.resp == 1){
+                            $('.rut_error').html('<ul class="errorlist"><li>Ya existe un/a Usuario con este/a Rut .</li></ul>');
+                          }
+
+                      }
+                  });
+                }
+
+            } else {
+                // $(element).val("")
+                $('.rut_error').html('<ul class="errorlist"><li>El RUT no es válido</li></ul>');
+            }
+
+        }
+        var Fn = {
+          // Valida el rut con su cadena completa "XXXXXXXX-X"
+          validaRut : function (rutCompleto) {
+            rutCompleto = rutCompleto.replace(/\./g, '');
+            $('.rut_error').html('');
+            if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto ))
+              return false;
+            var tmp   = rutCompleto.split('-');
+            var digv  = tmp[1];
+            var rut   = tmp[0];
+            if ( digv == 'K' ) digv = 'k' ;
+
+            return (Fn.dv(rut) == digv );
+          },
+          dv : function(T){
+            var M=0,S=1;
+            for(;T;T=Math.floor(T/10))
+              S=(S+T%10*(9-M++%6))%11;
+            return S?S-1:'k';
+          }
+        }
+
+        function formatRut(sRut1) {
+            if (sRut1 == null)
+              return false;
+
+            sRut1 = sRut1.toUpperCase();
+            sRut1 = quitarEspacios(sRut1);
+            // contador de para saber cuando insertar el . o la -
+            var nPos = 0;
+
+            // Guarda el rut invertido con los puntos y el guiï¿½n agregado
+            var sInvertido = "";
+
+            // Guarda el resultado final del rut como debe ser
+            var sRut = "";
+            while (sRut1.indexOf(".") != -1) {
+                sRut1 = sRut1.replace(".", "");
+            }
+            sRut1 = sRut1.replace("-", "");
+
+            for ( var i = sRut1.length - 1; i >= 0; i--) {
+                sInvertido += sRut1.charAt(i);
+                if (i == sRut1.length - 1)
+                    sInvertido += "-";
+                else if (nPos == 3) {
+                    sInvertido += ".";
+                    nPos = 0;
+                }
+                nPos++;
+            }
+
+            for ( var j = sInvertido.length - 1; j >= 0; j--) {
+                if (sInvertido.charAt(sInvertido.length - 1) != ".")
+                    sRut += sInvertido.charAt(j);
+                else if (j != sInvertido.length - 1)
+                    sRut += sInvertido.charAt(j);
+
+            }
+
+            return sRut.toUpperCase()
+
+        }
+
+        function quitarEspacios(rut) {
+            var i=0;
+            while (rut.length>i){
+                if((rut.substring(i, i+1)==" ")||(rut.codePointAt(i)==173)){
+                    rut = rut.substring(0, i) + rut.substring(i+1, rut.length);
+                }else{
+                    i=i+1;
+                }
+            }
+            return rut;
+        }
+        
+      </script>
+
+{% block js %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script type="text/javascript">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == 25 %}
+                Swal.fire({
+                    {% if message.extra_tags %}
+                        title: "{{ message.extra_tags }}",
+                    {% endif %}
+                    text: "{{ message }}",
+                    type: 'success',
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+      // Grafico de barras( dias eje x , cantidad eje y)
+      var days =  []
+      var atenciones_cant_data = []
+
+      var days = [
+          {% for item in atenciones_medicas_data %}
+              '{{item.fecha}}',
+          {% endfor %}
+      ]
+
+      var atenciones_cant_data = [
+          {% for item in atenciones_medicas_data %}
+              {{item.total_cant_atenciones}},
+          {% endfor %}
+      ]
+      var year = '{{year}}'
+      changeChart(days, year, atenciones_cant_data);
+  });
+
+    // Si se seleccion una atencion se pone active
+    $(document).on("click", ".list-group-item", function() {
+          $('.list-group-item').removeClass('active');
+          $(this).addClass('active');
+    });
+    // Si se cierra el modal la atencion deja de estar active(evento de cierre de un modal de boostrap hidden.bs.modal)
+    $('#modal_atencion').on('hidden.bs.modal', function () {
+          $('.list-group-item').removeClass('active');
+    })
+
+  function changeChart(days, year, atenciones_cant_data){
+
+      Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Flujo de la semana'
+        },
+        subtitle: {
+            text: 'Atenciones médicas realizadas'
+        },
+        xAxis: {
+            categories: days,
+            crosshair: true
+        },
+        yAxis: {
+            tickInterval: 1,
+            min: 0,
+            title: {
+                text: 'Cantidad de atenciones'
+            }
+        },
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: ["viewFullscreen", "downloadCSV", "downloadPDF", "separator", "downloadPNG", "downloadJPEG"],
+                    y: -10
+                }
+            }
+        },
+        lang: {
+            printChart: 'Print chart',
+            downloadCSV: 'Descargar CSV',
+            downloadPNG: 'Descargar PNG',
+            downloadJPEG: 'Descargar JPEG',
+            downloadPDF: 'Descargar PDF',
+            contextButtonTitle: 'Menú de exportación',
+            viewFullscreen: 'Pantalla completa'
+        },
+
+        credits: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.x}' + year + '</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b> {point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+
+        series: [{
+              name: 'Total de atenciones médicas',
+              type: 'column',
+              yAxis: 0,
+              data: atenciones_cant_data,
+          }]
+      });
+  }
+  // Función para obtener los datos de una atención médica al seleccionar su id en Listado de ultimas atenciones
+    function ver_atencion(id){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'Cestock:atencion-detalle'%}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'id': id
+            },
+            success: function (data, status) {
+                console.log("data", data)
+
+                // Valores de la atencion medica, el texto se pone en los span con esa id
+                $('#id').text(data.id);
+                $('#doctor').text(data.doctor);
+                $('#ficha').text(data.ficha);
+                $('#fecha').text(data.fecha);
+                $('#paciente').text(data.paciente);
+                $('#sintomas').text(data.sintomas);
+                $('#diagnostico').text(data.diagnostico);
+                $('#tratamiento').text(data.tratamiento);
+                $('#observacion').text(data.observacion);
+
+            }
+        });
+    }
+
+  </script>
+{% endblock js %}
+{% else %}
+    <br>
+    <br>
+    <div id="merror" style="text-align: center;">
+        <img src="https://pngimage.net/wp-content/uploads/2018/06/404-not-found-png-5.png" alt="" id="imgerror">
+        <br>
+        <br>
+        <h2>Se genero un error inesperado,por favor regrese al Inicio de Sesión</h2>
+        <a class="btn btn-danger" href="{% url 'Cestock:loginn' %}">Inicio de Sesión</a>
+    </div>
+{% endif %}
+</body>
+
+</html>

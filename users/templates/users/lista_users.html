@@ -1,0 +1,203 @@
+{% extends 'Cestock/PaginaPrincipal.html' %}
+{% load static %}
+    {% block css %}
+    <style>
+      .textotal{
+        width: 100% !important;
+      }
+      .rojo{
+        color: rgb(252, 2, 2);
+      }
+      .order-form .container {
+      color: #4c4c4c;
+      padding: 20px;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+    }
+    .con_white{
+      background-color: #fefefe;
+    }
+
+    </style>
+    {% endblock css %}
+    {% block titulo %}Lista de Usuarios{% endblock titulo %}
+
+    {% if user.is_staff %}
+    {% block Pagina %}
+     <section class="order-form my-4 mx-4">
+        <div class="container con_white pt-4 rounded-lg" >
+            <div class="row">
+
+                <div class="col-12">
+                  <h3>Listado de usuarios</h3>
+                  <span>Ingrese los datos indicados a continuación</span>
+                  <hr class="mt-1">
+                  <a href="{% url 'users:crear_doctor' %}" class="btn btn-success float-right">Nuevo</a>
+                </div>
+                <div class="col-12">
+                      <div class="col-md">
+                        <!-- Content Row -->
+                        <div class="row justify-content-md-center">
+                            <!-- Listado -->
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-body no-padding">
+                                        <table class="table responsive" id="tabla">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Nombre</th>
+                                                    <th>RUT</th>
+                                                    <th>Correo electrónico</th>
+                                                    <th>Tipo usuario</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                      </div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </section>
+{% endblock Pagina %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+       
+<script type="text/javascript">
+
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == 25 %}
+                Swal.fire({
+                    {% if message.extra_tags %}
+                        title: "{{ message.extra_tags }}",
+                    {% endif %}
+                    text: "{{ message }}",
+                    type: 'success',
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+
+    $(document).ready( function () {
+
+            $("#search_filter").show();
+
+            $('#tabla').DataTable({
+                responsive: true,
+                columnDefs: [ {
+                    orderable: true,
+                }],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{% url 'users:usuario_lista_database' %}",
+                    "type": "POST",
+                    "data": {
+                        "status_filter": "{{status_filter}}",
+                        "csrfmiddlewaretoken": '{{ csrf_token }}',
+
+                    }
+                },
+                order: [[ 0, 'desc' ]],
+                "language": {
+                    "search": "Filtro ",
+                    "info": "Viendo _START_ a _END_ de _TOTAL_ elementos",
+                    "paginate": {
+                        "first":      "Primero",
+                        "last":       "Último",
+                        "next":       "Siguiente",
+                        "previous":   "Anterior"
+                    },
+                    "lengthMenu": "Viendo _MENU_ elementos"
+                }
+            });
+
+            $('.btn-large').click(function() {
+                $('.btn-large').removeClass("active")
+                $(this).addClass("btn-success");
+
+            });
+
+        });
+
+    // function delete_user(id){
+
+    //       Swal.fire({
+    //           title: '¿Estás seguro de eliminar el registro?',
+    //           text: "No será posible revertir este cambio!",
+    //           type: 'warning',
+    //           showCancelButton: true,
+    //           confirmButtonColor: '#3085d6',
+    //           cancelButtonColor: '#d33',
+    //           confirmButtonText: 'Si, Eliminalo!'
+    //         }).then((result) => {
+
+    //             if (result.value) {
+    //                 $.ajax({
+    //                     type: "POST",
+    //                     url: "{% url 'users:eliminar_doctor'%}",
+    //                     data: {
+    //                         csrfmiddlewaretoken: '{{ csrf_token }}',
+    //                         'id': id
+    //                     },
+    //                     success: function (data, status) {
+    //                         location.reload();
+    //                     }
+    //                 });
+    //             }
+    //         })
+    //     }
+
+     function invalidar_user(id){
+
+        Swal.fire({
+            title: '¿Estás seguro de desactivar este usuario?',
+            text: "El usuarios sera desactivar!",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, desactivar!'
+        }).then((result) => {
+
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'users:invalidar_usuario'%}",
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        'id': id
+                    },
+                    success: function (data, status) {
+                        location.reload();
+                    }
+                });
+            }
+        })
+    }
+
+</script>
+
+{% endblock js %}
+{% else %}
+<br>
+<br>
+<div id="merror" style="text-align: center;">
+    <img src="https://pngimage.net/wp-content/uploads/2018/06/404-not-found-png-5.png" alt="" id="imgerror">
+    <br>
+    <br>
+    <h2>Se genero un error inesperado,por favor regrese al Inicio de Sesión</h2>
+    <a class="btn btn-danger" href="{% url 'Cestock:login' %}">Inicio de Sesión</a>
+</div>
+{% endif %}

@@ -1,0 +1,20 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Detalle de la Atención</h4>
+    </div>
+    <div class="modal-body">
+      {% if detalle.atencion_medica_id == id_atencion %} 
+        {% csrf_token %}
+        {{form.as_p}} 
+      {% elif id_atencion is None %}
+        <h2>Algo Salió Mal.</h2>
+      {% endif %}
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-info" type="button" data-dismiss="modal">
+        Atrás
+      </button>
+    </div>
+  </div>
+</div>

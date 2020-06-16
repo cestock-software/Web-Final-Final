@@ -1,0 +1,30 @@
+<!-- {% extends 'Cestock/PaginaPrincipal.html' %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block titulo %}Información del Paciente{% endblock titulo %}
+
+{% block Pagina %} -->
+<div class="modal-dialog" role="document" id="infpersona">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Información Personal del Paciente</h4>
+    </div>
+
+    <div class="modal-body">
+      <form action="get">
+        {{form.as_p}}
+      </form>  
+    </div>
+
+    <div class="modal-footer">
+      <a class="btn btn-info" href="{% url 'Cestock:ListaPacientes' %}">Atrás</a>
+      <!-- <button class="btn btn-info" type="button" data-dismiss="modal">Atrás</button> -->
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<!-- {% endblock Pagina %} -->

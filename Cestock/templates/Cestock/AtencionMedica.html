@@ -1,0 +1,198 @@
+{% extends 'Cestock/PaginaPrincipal.html' %}
+{% load static %}
+    {% block css %}
+    <style>
+      .textotal{
+        width: 100% !important;
+      }  
+      .rojo{
+        color: rgb(252, 2, 2);
+      }  
+      .order-form .container {
+      color: #4c4c4c;
+      padding: 20px;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+    }
+    .con_white{
+      background-color: #fefefe;
+    }
+
+    </style>
+    {% endblock css %}
+    {% block titulo %}Atencion{% endblock titulo %}
+
+    {% block Pagina %}
+    <br>
+    <br>
+    <section class="order-form my-4 mx-4">
+        <form id="formLog" method="POST" >
+        {% csrf_token %}
+        <div class="container con_white pt-4 rounded-lg" >
+          <div class="row">
+  
+            <div class="col-12">
+              <h3>Información de atención médica</h3>
+              <span>Ingrese los datos indicados a continuación ...</span>
+              <hr class="mt-1">
+            </div>
+            <div class="col-12">
+              <div class="col-md">
+                <h4><i class="fas fa-stethoscope fa-1x"></i>  Datos de atención médica</h4>
+                          <!-- <div class="col-md-6">
+                              <h5>Nombre de Medico:</h5>
+                              <div class="input-group form-group">
+                                  {% if user.is_authenticated %}
+                                  <input type="text" class="form-control" name="nombre_medico" value="{{ user.username }}">
+                                  {% endif %}
+                              </div>
+                          </div>
+  
+                          <div class="col-md-6">
+                              <h5>Numero de Ficha:</h5>
+                              <div class="input-group form-group">
+                                  <input type="text" class="form-control" name="nro_ficha" placeholder="Numero de Ficha" required>
+                              </div>
+                          </div> -->
+                      <div class="row mx-4">
+                        <div class="col-12 col-sm-6">
+                          <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                            {{form.nombre_medico.label}}
+                          </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1"><i class="fas fa-user-md"></i></span>
+                            </div>
+                              {% if user.is_authenticated %}
+                                  <input type="text" class="form-control" name="nombre_medico" disabled ="true" id="nombre" Value="{{ user.username }}">
+                              {% endif %}
+                          </div>
+                          {{form.nombre_medico.errors}}
+                        </div>
+                        <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                          <div class="col-12 mb-2" style="padding-left: 0px!important; ">
+                            {{form.nro_ficha.label}}
+                          </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1"><i class="fas fa-notes-medical"></i></span>
+                            </div>
+                              {{form.nro_ficha}}
+                          </div>
+                          {% if form.nro_ficha.errors %}
+                              {% for error in form.nro_ficha.errors %}
+                                  <h1 class="rojo">*Debe ingresar un número de ficha*</h1>
+                              {% endfor %}
+                          {% endif %}
+                        </div>
+                      </div>
+              </div>
+            </div>
+          </div>
+          <br>
+        </div>
+        <br>
+        <div class="container con_white pt-4 rounded-lg">
+          <div class="row">
+              <div class="col-12">
+                <div class="col-md">
+                      <h4><i class="fas fa-briefcase-medical"></i>  Detalles de atención médica</h4>
+                      <div class="row mt-3 mx-4">
+                        <div class="col-12 mb-2">
+                          <i class="fas fa-procedures"></i>
+                          {{formP.sintomas.label}}
+                        </div>
+                        <div class="col-12 ">
+                          {{formP.sintomas}}
+                          {{formP.sintomas.errors}}
+                        </div>
+                      </div>
+  
+                      <div class="row mt-3 mx-4">
+                        <div class="col-12 mb-2">
+                          <i class="fas fa-diagnoses"></i>
+                          {{formP.diagnostico.label}}
+                        </div>
+                        <div class="col-12">
+                          {{formP.diagnostico}}
+                          {{formP.diagnostico.errors}}
+                        </div>
+                      </div>
+                      <div class="row mt-3 mx-4">
+                        <div class="col-12 mb-2">
+                          <i class="fas fa-tablets"></i>
+                          {{formP.tratamiento.label}}
+                        </div>
+                        <div class="col-12">
+                          {{formP.tratamiento}}
+                          {{formP.tratamiento.errors}}
+                        </div>
+                      </div>
+  
+                      <div class="row mt-3 mx-4">
+                        <div class="col-12 mb-2">
+                          <i class="fas fa-comment-dots"></i>
+                          {{formP.observacion.label}}
+                        </div>
+                        <div class="col-12">
+                          {{formP.observacion}}
+                          {{formP.observacion.errors}}
+                        </div>
+                      </div>
+                    <div class="row mt-3">
+                      <div class="col-12">
+                        <input type="submit" value="Guardar atención medica" class="btn btn-success d-block mx-auto btn-submit">
+                        <!-- {% if atencion_medica %}
+                            <a href="{% url 'Cestock:Prescripcion' ID %}" class="gray-link modal-trigger"></a>
+                        {% endif %} -->
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+      </section>
+{% endblock Pagina %}
+
+{% block js %}
+
+<script type="text/javascript">
+    var validated = false;
+      $('#formLog').submit(function(e) {
+        if(validated)
+          return true;
+
+          e.preventDefault();
+          if($('#id_nro_ficha').val() == '' && $('#id_sintomas').val() == '' && $('#id_diagnostico').val() == ''  && $('#id_tratamiento').val() == '' )
+          {
+            console.log('NO TIENE LOS DATOS')
+          }
+          else{
+            console.log('TIENE LOS DATOS');
+            Swal.fire({
+              title: '¡Atención medica!',
+              type: 'success',
+              text: 'quiere crear atencion medica.',
+              showCloseButton: true,
+              showCancelButton: true,
+              confirmButtonText:'Confirmar',
+              confirmButtonAriaLabel: 'Confirmar',
+              cancelButtonText:'Cancelar',
+              cancelButtonAriaLabel: 'Cancelar',
+            }).then(function(result){
+               // function when confirm button clicked
+                if(result.value){
+                    console.log('good');
+                    validated = true;        
+                    $('#nombre').prop( "disabled", false );
+                    $('#formLog').submit();
+                }else if(result.dismiss == 'cancel'){
+                   console.log('cancel');
+                }
+            })
+
+          }
+          return false;
+      });
+  </script>
+{% endblock js %}

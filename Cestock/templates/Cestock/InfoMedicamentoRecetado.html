@@ -1,0 +1,30 @@
+<!-- {% extends 'Cestock/PaginaPrincipal.html' %} 
+{% load static %} 
+
+{% block css %}
+{% endblock css %} 
+
+{% block titulo %}Medicamento Recetado{% endblock titulo %} 
+
+{% block Pagina %} -->
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Información de la Receta Emitida</h4>
+    </div>
+    <div class="modal-body">
+      {% if med_recetado.id_receta_medica == id_med %} 
+        {% csrf_token %}
+        {{form.as_p}} 
+      {% elif id_med is None %}
+        <h2>No se elaboró una receta para esta atención.</h2>
+      {% endif %}
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-info" type="button" data-dismiss="modal">
+        Atrás
+      </button>
+    </div>
+  </div>
+</div>
+<!-- {% endblock Pagina %} -->

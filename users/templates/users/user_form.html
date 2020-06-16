@@ -1,0 +1,202 @@
+{% extends 'Cestock/PaginaPrincipal.html' %}
+{% load static %}
+    {% block css %}
+    <style>
+      .textotal{
+        width: 100% !important;
+      }
+      .rojo{
+        color: rgb(252, 2, 2);
+      }
+      .order-form .container {
+      color: #4c4c4c;
+      padding: 20px;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+    }
+    .con_white{
+      background-color: #fefefe;
+    }
+
+    </style>
+    {% endblock css %}
+    {% block titulo %}Formulario usuario{% endblock titulo %}
+
+    {% block Pagina %}
+     <section class="order-form my-4 mx-4">
+        <div class="container con_white pt-4 rounded-lg" >
+            <div class="row">
+
+                <div class="col-12">
+                  {% if not form.instance.id %}
+                    <h3>Formulario para registrar</h3>
+                  {% else %}
+                    <h3>Formulario para editar</h3>
+                  {% endif%}
+                  <span>Ingrese los datos indicados a continuación</span>
+                  <hr class="mt-1">
+                </div>
+                <div class="col-12">
+                      <div class="col-md">
+                        {% if not form.instance.id %}
+                          <form class="needs-validation" id="form" method="POST" enctype="multipart/form-data" action="{% url 'users:crear_doctor' %}" >
+                        {% else %}
+                          <form class="needs-validation" id="form" method="POST" enctype="multipart/form-data" action="{% url 'users:editar_doctor' form.instance.id  %}" >
+                        {% endif%}
+                            {% csrf_token %}
+                             <div class="row mx-4">
+                                <div class="col-12 col-sm-6">
+                                  <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                                    {{form.username.label}}
+                                  </div>
+                                  <div class="input-group mb-3">
+                                      {{form.username}}
+                                  </div>
+                                  {{form.username.errors}}
+                                </div>
+                                <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                                  {% if form.instance.id %}
+                                    {% if user.is_staff %}
+
+                                      <div class="col-12 mb-2" style="padding-left: 0px!important; ">
+                                        {{form.rut.label}}
+                                      </div>
+                                      <div class="input-group mb-3">
+                                          {{form.rut}}
+                                      </div>
+                                    {% else %}
+                                      <div class="col-12 mb-2" style="padding-left: 0px!important; ">
+                                        {{form.rut.label}}
+                                      </div>
+                                      <div class="input-group mb-3">
+                                          <input type="text" name="rut" value='{{ form.instance.rut }}' class="form-control valida-rut" placeholder="Rut..." disabled id="id_rut">
+                                      </div>
+                                    {% endif %}
+                                  {% else %}
+                                    <div class="col-12 mb-2" style="padding-left: 0px!important; ">
+                                      {{form.rut.label}}
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        {{form.rut}}
+                                    </div>
+                                  {% endif %}
+                                  {% if form.rut.errors %}
+                                  {% for error in form.rut.errors %}
+                                      <div class="with-errors rut_error" role="alert">
+                                        {{ form.rut.errors }}
+                                      </div>
+                                  {% endfor %}
+                                {% else %}
+                                  <div class="with-errors rut_error" role="alert">
+                                  </div>
+                                {% endif %}
+
+
+                                </div>
+                              </div>
+                               <div class="row  mx-4">
+                                <div class="col-12 col-sm-6" style="padding-left: 0px!important;">
+                                  <div class="col-12 mb-2">
+                                    {{form.email.label}}
+                                  </div>
+                                  <div class="col-12 mb-3">
+                                    {{form.email}}
+                                    {{form.email.errors}}
+                                  </div>
+                                </div>
+                               
+                                <div class="col-12 col-sm-6">
+                                  {% if not form.instance.id %}
+                                  <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                                    {{form.tipo_usuario.label}}
+                                  </div>
+                                
+                                <div class="input-group mb-3 form-group">
+                                  <select name="tipo_usuario" class="form-control responsive" placeholder="Ingrese Número de Ficha" required="" id="tipo_usuario">
+                                    
+                                    <option value="medico" selected="medico">Médico</option>
+                                    <option value="farmaceutico" selected="farmaceutico">Farmaceutico</option>
+                                    <option value="administrativo" selected="administrativo">Administrativo</option>
+                                    
+                                  </select>
+                                </div>
+                                {% else %}
+
+                                  <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                                    {{form.tipo_usuario.label}}
+                                  </div>
+                                  <div class="input-group mb-3">
+                                      {{form.tipo_usuario}}
+                                  </div>
+                                  {{form.tipo_usuario.errors}}
+                              
+
+                                {% endif %}
+                                
+                              </div>
+                                <!-- <div class="col-12 col-sm-6">
+                                  <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                                    {{form.tipo_usuario.label}}
+                                  </div>
+                                  <div class="input-group mb-3 form-group">
+                                      {{form.tipo_usuario}}
+                                  </div>
+                                  {{form.tipo_usuario.errors}}
+                                </div> -->
+                              </div>
+                              <div class="row mx-4">
+                              
+                                  <div class="col-12 col-sm-6">
+                                    <div class="col-12 mb-2"  style="padding-left: 0px!important;">
+                                      {{form.password1.label}}
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        {{form.password1}}
+                                    </div>
+                                    {{form.password1.errors}}
+                                  </div>
+                                  <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                                    <div class="col-12 mb-2" style="padding-left: 0px!important; ">
+                                      {{form.password2.label}}
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        {{form.password2}}
+                                    </div>
+                                      {{form.password2.errors}}
+                                  </div>
+                                
+                              </div>
+                              <div class="row">
+
+                                  <div class="col">
+                                      <button class="btn btn-primary btn-lg float-right mx-auto btn-submit" type="submit">Guardar</button>
+                                      <!-- <input type="submit" value="Guardar" class="btn btn-success btn-lg float-right mx-auto "> -->
+                                      
+                                  </div>
+                              </div>
+                        </form>
+                      </div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </section>
+{% endblock Pagina %}
+
+{% block js %}
+<script type="text/javascript">
+  $('#form').submit(function() {
+    $('#id_rut').prop("disabled",false);
+    $('#id_tipo_usuario').prop("disabled",false);
+    var rut_medico = $('#id_rut').val();
+    var rut_last_part = rut_medico.split('.')[2]
+    var rut_sin_identificador = rut_medico.split('.')[0] + '' + rut_medico.split('.')[1] + '' + rut_last_part.split('-')[0]
+    var rut_identificador = rut_medico.split('-')[1]
+
+    var rut_medico_sin_formato = rut_sin_identificador + '' + rut_identificador
+    $('#id_rut').val(rut_medico_sin_formato);
+    return true;
+  });
+
+</script>
+
+{% endblock js %}

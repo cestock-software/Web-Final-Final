@@ -1,0 +1,58 @@
+{% extends 'Cestock/PaginaPrincipal.html' %}
+{% load static %}
+    {% block css %}
+    {% endblock css %}
+
+    {% block titulo %}Atencion{% endblock titulo %}
+
+    {% block Pagina %}
+    <div class="container">            
+        <h3>Prescripción</h3>
+        <div class="col-md">
+            <form  method="POST">
+                {% csrf_token %}
+              
+                <!-- <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Sintomas del paciente</label>
+                    <textarea class="form-control" name="sintomas" placeholder="sintomas" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Diagnostico del paciente</label>
+                    <textarea class="form-control" name="diagnostico" placeholder="diagnostico..." id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Tratamiento</label>
+                    <textarea class="form-control" name="tratamiento" placeholder="tratamiento..." id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Observacion</label>
+                    <textarea class="form-control" name="observacion" placeholder="observacion..." id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div> -->
+
+                {{form.sintomas.label}}
+                {{form.sintomas}}
+                {{form.sintomas.errors}}
+                
+                {{form.diagnostico.label}}
+                {{form.diagnostico}}
+                {{form.diagnostico.errors}}
+
+                {{form.tratamiento.label}}
+                {{form.tratamiento}}
+                {{form.tratamiento.errors}}
+
+                {{form.observacion.label}}
+                {{form.observacion}}
+                {{form.observacion.errors}}
+
+                <div class="form-group">
+                    <input type="submit" value="Generar" class="btn btn-success">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock Pagina %}

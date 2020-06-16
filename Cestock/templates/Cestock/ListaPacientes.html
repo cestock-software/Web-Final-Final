@@ -1,0 +1,100 @@
+{% extends 'Cestock/PaginaPrincipal.html' %} 
+{% load static %} 
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock css %} 
+
+{% block titulo %}Pacientes{% endblock titulo %} 
+
+{% block Pagina %}
+<br>
+<br>
+<div class="container">
+  <div class="row tabla-lista">
+    <div class="col text-left">
+      <div class="col">
+        <h4>Listado de Pacientes</h4>
+      </div>
+      <br />
+      <div class="row">
+        <div class="mx-auto col-md-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <form method="get">
+                <div class="form-row">
+                  <div class="form-group col-md-10 mb-0">
+                    {{pacientefilter.form|crispy}}
+                  </div>
+                  <div class="form-group col-md-2 mb-0">
+                    <button class="btn btn-info boton" type="submit" style="position: absolute; right: 0; bottom: 0;">Buscar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="mx-auto col-md-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <table class="table table-striped table-sm">
+                <thead>
+                  {% if pacientes %}
+                  <tr>
+                    <th scope="col">Rut Paciente</th>
+                    <th scope="col">Nombre Paciente</th>
+                    <th scope="col">Fecha Nacimiento</th>
+                    <th scope="col">Sexo</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for paciente in pacientes %}
+                  <tr>
+                    <th scope="row">{{ paciente.rut_paciente }}</th>
+                    <td>{{ paciente.nombre}} {{ paciente.ap_paterno }} {{ paciente.ap_materno }}</td>
+                    <td>{{ paciente.fecha_nacimiento }}</td>
+                    <td>{{ paciente.sexo|title }}</td>
+                    <td>
+                      <div class="btn-group dropright">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="sr-only">Toggle Dropright</span>
+                        </button>
+                        <div class="dropdown-menu">
+                          <!-- <a class="btn " href="{% url 'Cestock:InfoCarnetPaciente' paciente.rut_paciente %}">Info. Carnet</a>
+                          <a class="btn " href="{% url 'Cestock:InfoPersonalPaciente' paciente.rut_paciente %}">Info. Paciente</a> -->
+                          <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoCarnetPaciente' paciente.rut_paciente %}')"> Info. Carnet</button>
+                          <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoPersonalPaciente' paciente.rut_paciente %}')">Info. Personal Paciente</button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor%} {% else %}
+                  <h2>No Existen Pacientes Registrados.</h2>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="info" role="dialog">
+
+</div>
+<br>
+<script src="{% static 'js/listapacientes/modal.js' %}" !important></script>
+{% endblock Pagina %}
+
+{% block js %}
+
+{% endblock js %}

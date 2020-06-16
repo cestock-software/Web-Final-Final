@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet"  href="{% static 'css/main/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <title>Document</title>
+</head>
+<style>
+  
+#recuperar_clave{
+    background: #ffffffa8;
+    padding-left:10%;padding-right:10%;
+    padding-bottom: 5%; padding-top: 5%;
+    margin-left: 15%;margin-right: 15%;
+    margin-bottom: 10%;margin-top: 10%;
+    border-radius:50px ;
+    overflow: hidden;
+}
+
+#recuperar_text{
+    background: #ffffffa8;
+    padding-left:10%;padding-right:10%;
+    padding-bottom: 5%; padding-top: 5%;
+    margin-left: 7%;margin-right: 7%;
+    margin-bottom: 10%;margin-top: 10%;
+    border-radius:50px ;
+    overflow: hidden;
+}
+.txt{
+    margin-right:45%;
+}
+
+.container{
+    width: 600px;
+    z-index: 10;
+  }
+#recuperar_button{
+    background-color: rgba(180, 32, 52, 0.836);
+    border-radius: 5px;
+    border: none;
+    color: #ffffff;
+    text-transform: uppercase;
+    padding: -5px;
+    text-align: center;
+    height: 100%;
+    padding: 5px;
+}
+.a{
+    background-color: rgba(180, 32, 52, 0.836);
+    display: block;
+    padding: 15px 15px;
+    border-radius: 5px;
+    color: aliceblue;
+    text-decoration: none;
+    border-bottom: 1px solid #ffffff;
+    margin-bottom: 20px;
+    width: 170px;
+    width: 180px;
+    text-align:center;
+    text-transform: uppercase; 
+}
+.a:hover{
+  text-decoration: none;
+  color: #ffffff;
+  text-align:center;
+  background: rgba(190, 56, 74, 0.836);
+}
+#recuperar_button:hover{
+    background: rgba(190, 56, 74, 0.836);
+}
+
+@media (max-width: 767px) {
+
+#recuperar_clave{
+
+    margin-left: 5%;margin-right: 5%;
+}
+
+.txt{
+    margin-right:5%;
+}
+}
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #17a2b8!important;">
+        <a class="navbar-brand" href="{% url 'Cestock:loginn' %}">CESTOCK</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="true" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarColor03" style="background-color: #17a2b8!important;">
+
+
+          <ul class=" navbar-nav navbar-right">
+
+          
+          </ul>
+        </div>
+      </nav>
+
+      {% block Pagina %}
+      {% endblock Pagina %}
+
+
+
+      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'alert/sweetalert2.all.min.js' %}"></script>
+        <script src="{% static 'js/main/main.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+</body>
+</html>

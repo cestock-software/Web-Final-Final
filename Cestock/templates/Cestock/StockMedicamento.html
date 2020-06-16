@@ -1,0 +1,88 @@
+{% extends 'Cestock/PaginaPrincipal.html' %} 
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+
+{% endblock css %} 
+
+{% block titulo %}Stock{% endblock titulo %} 
+
+{% block Pagina %}
+<br>
+<br>
+<div class="container">
+  <div class="row tabla-lista">
+    <div class="col text-left">
+      <div class="col">
+        <h4>Stock Medicamentos</h4>
+      </div>
+      <br />
+      <div class="row">
+        <div class="mx-auto col-md-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <form method="get">
+                <div class="form-row">
+                  <div class="form-group col-md-10 mb-0">
+                    {{filtro.form|crispy}}
+                  </div>
+                  <div class="form-group col-md-2 mb-0">
+                    <button class="btn btn-info boton" type="submit" style="position: absolute; right: 0; bottom: 0;">Buscar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="mx-auto col-md-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <table
+                class="table table-striped table-sm"
+                cellspacing="0"
+                width="100%"
+              >
+                {% if medicamentos %}
+                <thead>
+                  <tr>
+                    <th class="th-sm" scope="col">Id Medicamento</th>
+                    <th class="th-sm" scope="col">Nombre Medicamento</th>
+                    <th class="th-sm" scope="col">Formato</th>
+                    <th class="th-sm" scope="col">GR / ML</th>
+                    <th class="th-sm" scope="col">Laboratorio</th>
+                    <th class="th-sm" scope="col">Total Disponible</th>
+                    <th class="th-sm" scope="col">Total Reservado</th>
+                    <th class="th-sm" scope="col">Total Retirado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for medicamento in medicamentos %} 
+                  <tr>
+                    <th scope="row">{{ medicamento.id_medicamento }}</th>
+                    <td>{{ medicamento.nombre_medicamento}}</td>
+                    <td>{{ medicamento.gr_ml }}</td>
+                    <td>{{ medicamento.formato }}</td>
+                    <td>{{ medicamento.laboratorio }}</td>
+                    <td>{{ medicamento.total_disponible }}</td>
+                    <td>{{ medicamento.total_reservado }}</td>
+                    <td>{{ medicamento.total_retirado }}</td>
+                  </tr>
+                  {% endfor%}
+                </tbody>
+                {% else %}
+                <h2>No Existe Registro De Medicamento.</h2>
+                {% endif %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+{% endblock Pagina %}

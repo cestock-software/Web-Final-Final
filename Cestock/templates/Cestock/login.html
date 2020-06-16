@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio Sesión Cestock</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/Login/Principal.css">
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Inicio de Sesion</h3>
+                </div>
+                <div class="card-body">
+                    <form id="formLog" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control formato" name="rut" id="id_rut" maxlength="12" placeholder="Rut">
+                            
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" class="form-control" name="password" placeholder="Contraseña">
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" value="Entrar" class="btn float-right login_btn">
+                        </div>
+                    </form>
+                </div>
+                <style>
+                    .link{
+                        color: #ffffff;
+                        text-decoration: none;
+                    }
+                    .link:hover{
+                        color: #86baeb;
+                        text-decoration: none;
+                    }
+                </style>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center">
+                        <a class="link" href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+<script src='static/alert/sweetalert2.all.min.js'></script>
+<script type="text/javascript">
+    if ($(".formato").val() !== ""){
+        if ($(".formato").val() != null) {
+            var new_format = formatRut($(".formato").val())
+            $(".formato").val(new_format)
+        }
+    }
+
+    $(".formato").blur(function(){
+        validate_blur_rut(this);
+    });
+
+    function validate_blur_rut(element){
+        if ($(element).val() == "")
+            return false;
+
+        var new_format = formatRut($(element).val())
+
+        new_format_sin_puntos = new_format.replace(/\./g, '');
+        // el nuevo formato es este es numeros - numero o k
+        if (/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( new_format_sin_puntos )){
+            $(element).val(new_format);
+        }else{
+            var rut_medico = $('#id_rut').val();
+            var rut_last_part = rut_medico.split('.')[2]
+            var rut_sin_identificador = rut_medico.split('.')[0] + '' + rut_medico.split('.')[1] + '' + rut_last_part.split('-')[0]
+            var rut_identificador = rut_medico.split('-')[1]
+
+            var rut_medico_sin_formato = rut_sin_identificador + '' + rut_identificador
+            $('#id_rut').val(rut_medico_sin_formato);
+        }
+          // esta ok
+       
+        //   es cualquier pendejada
+
+        
+        // } else {
+        //     $(element).val("")
+        //     $('.rut_error').html('<ul class="errorlist"><li>El RUT no es válido</li></ul>');
+        // }
+
+    }
+
+    var Fn = {
+    // //   // Valida el rut con su cadena completa "XXXXXXXX-X"
+        validaRut : function (rutCompleto) {
+        rutCompleto = rutCompleto.replace(/\./g, '');
+            $('.rut_error').html('');
+        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto ))
+            return false;
+        var tmp   = rutCompleto.split('-');
+        var digv  = tmp[1];
+        var rut   = tmp[0];
+        if ( digv == 'K' ) digv = 'k' ;
+
+            return (Fn.dv(rut) == digv );
+        }
+    //   dv : function(T){
+    //     var M=0,S=1;
+    //     for(;T;T=Math.floor(T/10))
+    //       S=(S+T%10*(9-M++%6))%11;
+    //     return S?S-1:'k';
+    //   }
+    }
+
+    function formatRut(sRut1) {
+        if (sRut1 == null)
+          return false;
+
+        sRut1 = sRut1.toUpperCase();
+        sRut1 = quitarEspacios(sRut1);
+        console.log(sRut1)
+        // contador de para saber cuando insertar el . o la -
+        var nPos = 0;
+
+        // Guarda el rut invertido con los puntos y el guiï¿½n agregado
+        var sInvertido = "";
+
+        // Guarda el resultado final del rut como debe ser
+        var sRut = "";
+        while (sRut1.indexOf(".") != -1) {
+            sRut1 = sRut1.replace(".", "");
+        }
+        sRut1 = sRut1.replace("-", "");
+
+        for ( var i = sRut1.length - 1; i >= 0; i--) {
+            sInvertido += sRut1.charAt(i);
+            if (i == sRut1.length - 1)
+                sInvertido += "-";
+            else if (nPos == 3) {
+                sInvertido += ".";
+                nPos = 0;
+            }
+            nPos++;
+        }
+
+        for ( var j = sInvertido.length - 1; j >= 0; j--) {
+            if (sInvertido.charAt(sInvertido.length - 1) != ".")
+                sRut += sInvertido.charAt(j);
+            else if (j != sInvertido.length - 1)
+                sRut += sInvertido.charAt(j);
+
+        }
+
+        return sRut.toUpperCase()
+
+    }
+
+    function quitarEspacios(rut) {
+        var i=0;
+        while (rut.length>i){
+            if((rut.substring(i, i+1)==" ")||(rut.codePointAt(i)==173)){
+                rut = rut.substring(0, i) + rut.substring(i+1, rut.length);
+            }else{
+                i=i+1;
+            }
+        }
+        return rut;
+    }
+    $('#formLog').submit(function() {
+    var rut_medico = $('#id_rut').val();
+    var rut_last_part = rut_medico.split('.')[2]
+    var rut_sin_identificador = rut_medico.split('.')[0] + '' + rut_medico.split('.')[1] + '' + rut_last_part.split('-')[0]
+    var rut_identificador = rut_medico.split('-')[1]
+    console.log($('#id_rut').val())
+    var rut_medico_sin_formato = rut_sin_identificador + '' + rut_identificador
+    $('#id_rut').val(rut_medico_sin_formato);
+    return true;
+  });
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == 40 %}
+                Swal.fire({
+                    {% if message.extra_tags %}
+                        title: "{{ message.extra_tags }}",
+                    {% endif %}
+                    text: "{{ message }}",
+                    type: 'error',
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+
+</html>
