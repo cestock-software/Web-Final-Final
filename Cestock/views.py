@@ -59,7 +59,10 @@ def index(request):
         password = request.POST.get('password')
         userobj=UserSistema.objects.filter(rut=rut,tipo_usuario="medico",estado=True).first()
         if userobj:
+            userobj.conexion=True
+            userobj.save()
             user = auth.authenticate(username=userobj.username, password=password)
+            print(user.conexion)
         form = LoginForm(user, request.POST)
 
         if user:
@@ -69,7 +72,10 @@ def index(request):
         else:
             userobj=UserSistema.objects.filter(rut=rut,tipo_usuario="administrador").first()
             if userobj:
+                userobj.conexion=True
+                userobj.save()
                 user = auth.authenticate(username=userobj.username, password=password)
+                print(user.conexion)
             form = LoginForm(user, request.POST)
             if user:
                 auth.login(request=request, user=user)
@@ -84,6 +90,10 @@ def index(request):
 
 
 def logoutt(request):
+    conex=request.user
+    conex.conexion=False
+    conex.save()
+    print(conex.conexion)
     auth.logout(request)
     return redirect(reverse('Cestock:loginn'))
 
@@ -156,7 +166,7 @@ def crearAtencionMedica(request):
             atencionmedica.fecha_atencion_medica= timezone.now()
             atencionmedica.save()
             print(atencionmedica)
-            messages.add_message(request, messages.SUCCESS, 'se ha creado con exito', extra_tags='Atencion Medica')
+            messages.add_message(request, messages.SUCCESS, 'se ha creado con éxito', extra_tags='Atención Médica')
             presc=formP.save()
             # presc.save()
             # print(presc)

@@ -38,7 +38,7 @@ def user_update(request, pk):
         if form.is_valid():
             user_editado = form.save()
             user_editado.save()
-            messages.add_message(request, messages.SUCCESS, 'se ha editado con exito', extra_tags='Editar perfil de usuario')
+            messages.add_message(request, messages.SUCCESS, 'se ha editado con éxito', extra_tags='Editar perfil de usuario')
             if request.user.is_staff:
                 return redirect(reverse('users:lista_users'))
             else:
@@ -122,16 +122,16 @@ def usuario_lista_database(request):
             if user.is_staff:
                 actions = edit_button 
             else:
-                actions = edit_button + invalidar_button
+                if user.conexion is True:
+                    actions = edit_button
+                else:
+                    actions = edit_button + invalidar_button
 
-            # dataArray.append([
-            #     user.id,
-            #     user.username,
-            #     user.rut,
-            #     user.email,
-            #     user.tipo_usuario,
-            #     actions,
-            # ])
+            if user.conexion is True:
+                # conx='Conectado'
+                conx='<p style="background-color: rgb(20, 155, 20);border-radius: 10px;text-align: center;color:rgb(255, 255, 255);">Conectado</p>'
+            else:
+                conx='<p style="background-color: rgb(235, 32, 32);border-radius: 10px;text-align: center;color:rgb(255, 255, 255);">Desconectado</p>'
 
             if user.rut:
                 # se les retira . y guion de existir un rut con este formato
@@ -171,6 +171,7 @@ def usuario_lista_database(request):
                 rut_con_formato,
                 user.email,
                 user.tipo_usuario,
+                conx,
                 actions,
             ])
         except Exception as e:
@@ -230,26 +231,10 @@ def usuario_lista_database2(request):
     for user in users:
         print('................................')
         print(user.estado)
-        try:
-            
-            # url_edit = reverse('users:editar_doctor', kwargs={'pk': user.id})
-            # edit_button = '<a href="' + url_edit + '" class="btn btn-link"><i class="fas fa-pen"></i></a>'
-            delete_button = '<button class="btn btn-link" onclick="delete_user(' + str(user.id) + ')" title="Eliminar"  ><i class="fas fa-trash"></i></button>'
+        try:            
             validar_button = '<button class="btn btn-link" onclick="validar_user(' + str(user.id) + ')" title="Validar" ><i class="fa fa-check"></i></button>'
 
-            if user.is_staff:
-                actions = validar_button
-            else:
-                actions = validar_button + delete_button
-
-            # dataArray.append([
-            #     user.id,
-            #     user.username,
-            #     user.rut,
-            #     user.email,
-            #     user.tipo_usuario,
-            #     actions,
-            # ])
+            actions = validar_button 
 
             if user.rut:
                 # se les retira . y guion de existir un rut con este formato
@@ -344,6 +329,7 @@ def user_password_change(request):
             print('tas pendejo')
             user = form.save()
             update_session_auth_hash(request, form.user)
+            messages.add_message(request, messages.SUCCESS, 'se ha editado con éxito', extra_tags='Editar contraseña de usuario')
             return redirect(reverse('Cestock:PaginaPrincipal'))
         else:
             print(form.errors)
