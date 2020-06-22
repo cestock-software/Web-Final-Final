@@ -4,13 +4,6 @@ from datetime import datetime
 import datetime
 # Create your models here.
 
-# class Userito(AbstractBaseUser):
-#     username = models.CharField(max_length=250, unique=True)
-#     rut_medico=models.CharField(default="",max_length=12,blank=True, null=True)
-#     email= models.EmailField(default="",max_length=254,blank=True, null=True)
-
-#     USERNAME_FIELD = 'username'
-
 class Atencion_Medica(models.Model):
     nro_ficha = models.ForeignKey('Carnet_Paciente', db_column='nro_ficha',on_delete=models.CASCADE, null=True)
     fecha_atencion_medica = models.DateField(auto_now=True)
@@ -135,6 +128,7 @@ class Medicamento_Recetado(models.Model):
     id_medicamento_recetado = models.IntegerField(primary_key=True,null=True)
     id_medicamento = models.ForeignKey('Medicamento', db_column='id_medicamento', on_delete=models.CASCADE, null=True)
     id_receta_medica = models.ForeignKey('Receta_Medica', db_column='id_receta_medica', on_delete=models.CASCADE, null=True)
+    id_estado_reserva = models.ForeignKey('Estado_Reserva', db_column='id_estado_reserva', on_delete=models.CASCADE, null=True)
     duracion = models.CharField(default="",max_length=255, blank=True, null=True)
     frecuencia = models.CharField(default="",max_length=255, blank=True, null=True)
     cantidad_recetada = models.IntegerField()
@@ -216,7 +210,7 @@ class Receta_Medica(models.Model):
         verbose_name_plural = 'Recetas Médicas'
 
     def __str__(self):
-        return f'{self.id_recid_receta_medicaeta}' 
+        return f'{self.id_receta_medica}' 
 
 class Reposicion(models.Model):
     id_reposicion = models.IntegerField(primary_key=True)
@@ -236,7 +230,7 @@ class Reposicion(models.Model):
 
 class Reserva(models.Model):
     id_reserva = models.IntegerField(primary_key=True)
-    id_medicamento_recetado = models.ForeignKey('Medicamento', db_column='id_medicamento_recetado', on_delete=models.CASCADE, null=True)
+    id_medicamento_recetado = models.ForeignKey('Medicamento_Recetado', db_column='id_medicamento_recetado', on_delete=models.CASCADE, null=True)
     id_estado_reserva = models.ForeignKey('Estado_Reserva', db_column='id_estado_reserva', on_delete=models.CASCADE, null=True)
     cant_reservada = models.IntegerField(default=0,blank=True, null=True)
     fecha_reserva = models.DateField(auto_now=True)
@@ -263,17 +257,6 @@ class retiro_medicamento(models.Model):
 
     def __str__(self):
         return f'{self.id_retiro}' 
-
-
-# CREATE TABLE retiro_medicamento (
-#     id_retiro          NUMBER(5) NOT NULL,
-#     id_medicamento     NUMBER(5) NOT NULL,
-#     id_tipo_retiro     NUMBER(5) NOT NULL,
-#     cantidad_retirada  NUMBER(10) NOT NULL,
-#     fecha_retiro       DATE NOT NULL
-# );
-
-# ALTER TABLE retiro_medicamento ADD CONSTRAINT retiro_medicamento_pk PRIMARY KEY ( id_retiro );
 
 class Genero(models.Model):
     id_genero = models.IntegerField(primary_key=True)
