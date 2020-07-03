@@ -14,13 +14,73 @@
     </div>
   
     <div class="modal-body">
-      <form action="get">
-        {% if carnet.rut_paciente == rut %}
-          {{form.as_p}}  
-        {% else %}
-          <h4>Paciente no posee carnet de atención.</h4>
-        {% endif %}
-      </form>
+      <form action="" id="formulario" method="GET">
+                {% csrf_token %}
+                {% for info in infocarnet %}
+                <div class="form-group">
+                  <label for="ficha">Nro. Ficha</label>
+                  <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      ><i class="far fa-id-card"></i></span>
+                  </div>
+                  <input class="form-control" type="text" name="ficha" id="ficha" value="{{info.0}}" readonly disabled/>
+                </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rut">Rut Paciente</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"
+                        ><i class="fas fa-fingerprint"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="rut" id="rut" value="{{info.1}}" readonly disabled/>
+                </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="grupo">Grupo Sanguíneo</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-hand-holding-medical"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="grupo" id="grupo" value="{{info.2}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="prevision">Previsión</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-shield-alt"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="prevision" id="prevision" value="{{info.3}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="sector">Sector</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-clinic-medical"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="sector" id="sector" value="{{info.4}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="cesfam">Cesfam</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-hospital"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="cesfam" id="cesfam" value="{{info.5}}" readonly disabled/>
+                  </div>
+                </div>
+                {% endfor %}
+               
+              </form> 
     </div>
 
     <div class="modal-footer">

@@ -51,27 +51,41 @@
                   <tr>
                     <th class="th-sm" scope="col">Id Medicamento</th>
                     <th class="th-sm" scope="col">Nombre Medicamento</th>
+                    <th class="th-sm" scope="col">Dosis</th>
                     <th class="th-sm" scope="col">Formato</th>
-                    <th class="th-sm" scope="col">GR / ML</th>
                     <th class="th-sm" scope="col">Laboratorio</th>
+                    <th class="th-sm" scope="col">Unidad de Medida</th>
                     <th class="th-sm" scope="col">Total Disponible</th>
                     <th class="th-sm" scope="col">Total Reservado</th>
                     <th class="th-sm" scope="col">Total Retirado</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for medicamento in medicamentos %} 
+                  {% for formato in formatos %}
+                  {% for unidad in unidades %}
+                  {% for laboratorio in laboratorios %}
+                  {% for medicamento in medicamentos %}
+                  {% if medicamento.id_formato == formato %}
+                  {% if medicamento.id_umedida == unidad %}
+                  {% if medicamento.id_laboratorio == laboratorio %}
                   <tr>
                     <th scope="row">{{ medicamento.id_medicamento }}</th>
                     <td>{{ medicamento.nombre_medicamento}}</td>
-                    <td>{{ medicamento.gr_ml }}</td>
-                    <td>{{ medicamento.formato }}</td>
-                    <td>{{ medicamento.laboratorio }}</td>
+                    <td>{{ medicamento.dosis }}</td>
+                    <td>{{ formato.nombre_formato }}</td>
+                    <td>{{ unidad.tipo_medida }}</td>
+                    <td>{{ laboratorio.nombre_laboratorio }}</td>
                     <td>{{ medicamento.total_disponible }}</td>
                     <td>{{ medicamento.total_reservado }}</td>
                     <td>{{ medicamento.total_retirado }}</td>
                   </tr>
-                  {% endfor%}
+                  {% endif %}
+                  {% endif %}
+                  {% endif %}
+                  {% endfor %}
+                  {% endfor %}
+                  {% endfor %}
+                  {% endfor %}
                 </tbody>
                 {% else %}
                 <h2>No Existe Registro De Medicamento.</h2>

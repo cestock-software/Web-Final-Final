@@ -15,5 +15,4 @@ class UserSistema(AbstractUser):
     email= models.EmailField(max_length=254,blank=True, null=True,unique=True)
     tipo_usuario=models.CharField(default="administrador",max_length=50,blank=True, null=True)
     estado=models.BooleanField(default=True)
-    conexion=models.BooleanField(default=False)
     USERNAME_FIELD = 'username'

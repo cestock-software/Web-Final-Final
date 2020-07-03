@@ -7,18 +7,34 @@
 {% block titulo %}Medicamento Recetado{% endblock titulo %} 
 
 {% block Pagina %} -->
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title">Información de la Receta Emitida</h4>
     </div>
     <div class="modal-body">
-      {% if med_recetado.id_receta_medica == id_med %} 
-        {% csrf_token %}
-        {{form.as_p}} 
-      {% elif id_med is None %}
-        <h2>No se elaboró una receta para esta atención.</h2>
-      {% endif %}
+        <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col"><i class="fas fa-file-prescription"></i> ID Receta Médica</th>
+                    <th scope="col"><i class="fas fa-prescription-bottle-alt"></i> Medicamento</th>
+                    <th scope="col"><i class="fas fa-tablets"></i> Cantidad</th>
+                    <th scope="col"><i class="fas fa-wave-square"></i> Frecuencia</th>
+                    <th scope="col"><i class="fas fa-hourglass-half"></i> Duración del tratamiento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for info in inforeceta %}
+                  <tr>
+                    <th scope="row">{{info.0}}</th>
+                    <td>{{info.1}}</td>
+                    <td>{{info.2}}</td>
+                    <td>{{info.3}}</td>
+                    <td>{{info.4}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
     </div>
     <div class="modal-footer">
       <button class="btn btn-info" type="button" data-dismiss="modal">

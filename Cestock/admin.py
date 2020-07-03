@@ -1,9 +1,9 @@
-# from django.contrib import admin
-# from .models import *
-# from django.conf import settings
-# from users.models import UserSistema
-# from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-# from users.forms import UserChangeForm
+from django.contrib import admin
+from .models import *
+from django.conf import settings
+from users.models import UserSistema
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from users.forms import UserChangeForm
 
 # # Register your models here.
 # class UserAdminView(BaseUserAdmin):
@@ -78,4 +78,4 @@
 # admin.site.register(Receta_Medica, ListaRecetaMedica)
 # admin.site.register(Reposicion, ListaReposicion)
 # admin.site.register(Reserva, ListaReserva)
-# # admin.site.register(Userito)
+admin.site.register(UserSistema)

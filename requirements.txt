@@ -1,0 +1,4 @@
+django
+cx_Oracle
+django-crispy-forms
+django-filter
