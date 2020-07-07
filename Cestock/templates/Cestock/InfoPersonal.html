@@ -1,4 +1,4 @@
-<!-- {% extends 'Cestock/PaginaPrincipal.html' %}
+{% extends 'Cestock/PaginaPrincipal.html' %}
 {% load static %}
 
 {% block css %}
@@ -6,7 +6,7 @@
 
 {% block titulo %}Información del Paciente{% endblock titulo %}
 
-{% block Pagina %} -->
+{% block Pagina %}
 <div class="modal-dialog" role="document" id="infpersona">
   <div class="modal-content">
     <div class="modal-header">
@@ -14,9 +14,83 @@
     </div>
 
     <div class="modal-body">
-      <form action="get">
-        {{form.as_p}}
-      </form>  
+      <form action="" id="formulario" method="GET">
+                {% csrf_token %}
+                {% for info in infopaciente %}
+                <div class="form-group">
+                  <label for="direccion">Dirección</label>
+                  <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      ><i class="fas fa-map-marker-alt"></i></span>
+                  </div>
+                  <input class="form-control" type="text" name="direccion" id="direccion" value="{{info.0}}" readonly disabled/>
+                </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comuna">Comuna</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"
+                        ><i class="fas fa-city"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="comuna" id="comuna" value="{{info.1}}" readonly disabled/>
+                </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-envelope-square"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="email" id="email" value="{{info.2}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="celular">Celular</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
+                    </div>
+                    <input class="form-control" type="number" name="celular" id="celular" value="{{info.3}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="emailtutor">Email Tutor</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-envelope-square"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="emailtutor" id="emailtutor" value="{{info.4}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="celulartutor">Celular Tutor</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
+                    </div>
+                    <input class="form-control" type="number" name="celulartutor" id="celulartutor" value="{{info.5}}" readonly disabled/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="estado">Estado</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fas fa-info-circle"></i></span>
+                    </div>
+                    <input class="form-control" type="text" name="estado" id="estado" value="{{info.6}}" readonly disabled/>
+                  </div>
+                </div>
+                {% endfor %}
+               
+              </form> 
     </div>
 
     <div class="modal-footer">
@@ -27,4 +101,4 @@
 </div>
 <br>
 <br>
-<!-- {% endblock Pagina %} -->
+{% endblock Pagina %}

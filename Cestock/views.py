@@ -202,58 +202,63 @@ def validar_rut(request):
         }
     return JsonResponse(output)
 #-----------------------views Nico--------------------
+
+
 def ListaPacientes(request):
     pacientes = Paciente.objects.all()
+    generos = Genero.objects.all()
 
     pacientefilter = PacienteFilter(request.GET, queryset=pacientes)
     pacientes = pacientefilter.qs
-    
-    context = {'pacientes': pacientes, 'pacientefilter': pacientefilter}
+
+    context = {'pacientes': pacientes, 'generos': generos, 'pacientefilter': pacientefilter}
 
     return render(request, "Cestock/ListaPacientes.html", context)
 
-
 def StockMedicamento(request):
     medicamentos = Medicamento.objects.all().order_by('id_medicamento')
+    formatos = Formato.objects.all()
+    unidades = Unidad_medida.objects.all()
+    laboratorios = Laboratorio.objects.all()
     filtro = MedicamentoFilter(request.GET, queryset=medicamentos)
     medicamentos = filtro.qs
 
-    context = { 
+    context = {
         'medicamentos': medicamentos,
+        'formatos': formatos,
+        'unidades': unidades,
+        'laboratorios': laboratorios,
         'filtro': filtro
     }
 
     return render(request, "Cestock/StockMedicamento.html", context)
 
 def InfoPersonalPaciente(request, rut):
-    paciente = Paciente.objects.get(rut_paciente=rut)
+    data = {
+        'infopaciente': listado_info('SP_LISTAR_INFO_PACIENTE', rut),
+    }
 
-    if request.method == 'GET':
-        form = PacienteForm(instance=paciente)
-    
-    return render(request, 'Cestock/InfoPersonal.html', {'form': form})
-
+    return render(request, 'Cestock/InfoPersonal.html', data)
 
 def InfoCarnetPaciente(request, rut):
-    carnet = Carnet_Paciente.objects.get(rut_paciente=rut)
+    data = {
+        'infocarnet': listado_info('SP_LISTAR_INFO_CARNET', rut),
+    }
 
-    if request.method == 'GET':
-        form = CarnetForm(instance=carnet)
-
-    return render(request, 'Cestock/InfoCarnet.html', {'form': form})
+    return render(request, 'Cestock/InfoCarnet.html', data)
 
 def ListaAtenciones(request):
     carnets = Carnet_Paciente.objects.all()
-    # recetas = Receta_Medica.objects.all()
     atenciones = Atencion_Medica.objects.all()
+    detalle_atenciones = Detalle_Atencion.objects.all()
 
     filtro = AtencionFilter(request.GET, queryset=atenciones)
     atenciones = filtro.qs
 
     context = {
         'carnets': carnets,
-        # 'recetas': recetas, 
-        'atenciones': atenciones, 
+        'detalle_atenciones': detalle_atenciones,
+        'atenciones': atenciones,
         'filtro': filtro
     }
     return render(request, "Cestock/ListaAtenciones.html", context)
@@ -270,19 +275,82 @@ def InfoDetalleAtencion(request, id_atencion):
 
     return render ('Cestock/InfoDetalleAtencion.html', context)
 
-def InfoMedicamentoRecetado(request, id_med):
-    med_recetado = Medicamento_Recetado.objects.get(id_receta_medica=id_med)
-    medicamentos = Medicamento.objects.all()
-    if request.method == 'GET':
-        form = MedicamentoRecetadoForm(instance=med_recetado)
-
-    context = {
-        'medicamentos': medicamentos,
-        'form': form
+def InfoMedicamentoRecetado(request, id_atencion):
+    data = {
+        'inforeceta': listado_info('SP_LISTAR_INFO_RECETA_MEDICA', id_atencion),
     }
 
-    return render(request, 'Cestock/InfoMedicamentoRecetado.html', context)
+    return render(request, 'Cestock/InfoMedicamentoRecetado.html', data)
 
 
 def base(request):   
     return render(request,'Cestock/base.html')
+
+def RecetaMedica(request):
+    data = {
+        'atenciones': listado('SP_LISTAR_ATENCIONES'),
+        'medicamentos': listado('SP_LISTAR_MEDICAMENTOS'),
+        'estados': listado('SP_LISTAR_ESTADOS'),
+    }
+
+    if request.method == 'POST':
+        atencion_id = request.POST.get('atencion')
+        medicamento_id = request.POST.get('medicamento')
+        cantidad = request.POST.get('cantidad')
+        duracion = request.POST.get('duracion')
+        frecuencia = request.POST.get('frecuencia')
+        estado_id = request.POST.get('estado')
+
+        salida = insertar_receta(
+            atencion_id, duracion, frecuencia, cantidad, medicamento_id, estado_id)
+
+        if salida:
+            messages.add_message(
+                request, messages.SUCCESS, 'Se ha creado con éxito', extra_tags='Receta Médica')
+            return redirect(('Cestock:PaginaPrincipal'))
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'No se ha podido crear la receta', extra_tags='Receta Médica')
+
+        
+
+    return render(request, 'Cestock/RecetaMedica.html', data)
+
+def listado_info(procedimiento, parametro):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cursor = django_cursor.connection.cursor()
+
+    cursor.callproc(procedimiento, [out_cursor, parametro])
+
+    lista = []
+
+    for fila in out_cursor:
+        lista.append(fila)
+
+    return lista
+
+def listado(procedimiento):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cursor = django_cursor.connection.cursor()
+
+    cursor.callproc(procedimiento, [out_cursor])
+
+    lista = []
+
+    for fila in out_cursor:
+        lista.append(fila)
+
+    return lista
+
+
+def insertar_receta(atencion_id, duracion, frecuencia, cantidad, medicamento_id, estado_id):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_INSERTAR_RECETA', [
+                    atencion_id, duracion, frecuencia, cantidad, medicamento_id, estado_id, salida])
+
+    return salida.getvalue()

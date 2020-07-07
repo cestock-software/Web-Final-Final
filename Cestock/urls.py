@@ -12,6 +12,7 @@ urlpatterns = [
     path('main/', views.PaginaPrincipal, name='PaginaPrincipal'),
     path('recuperar_contraseña/', views.base, name='base'),
     path('atencion-medica/', views.crearAtencionMedica, name='AtencionMedica'),
+    path('receta-medica/', views.RecetaMedica, name='RecetaMedica'),
     path('atencion-medica/detalle/', views.get_atencion_detalle, name='atencion-detalle'),
     # path('prescripcion/<int:pk>/', views.Prescripcion, name='Prescripcion'),
     path('lista-pacientes/', views.ListaPacientes, name='ListaPacientes'),

@@ -47,17 +47,19 @@
                     <th scope="col">Rut Paciente</th>
                     <th scope="col">Nombre Paciente</th>
                     <th scope="col">Fecha Nacimiento</th>
-                    <th scope="col">Sexo</th>
+                    <th scope="col">Género</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
+                  {% for genero in generos %}
                   {% for paciente in pacientes %}
+                  {% if paciente.id_genero == genero %}
                   <tr>
                     <th scope="row">{{ paciente.rut_paciente }}</th>
                     <td>{{ paciente.nombre}} {{ paciente.ap_paterno }} {{ paciente.ap_materno }}</td>
                     <td>{{ paciente.fecha_nacimiento }}</td>
-                    <td>{{ paciente.sexo|title }}</td>
+                    <td>{{ genero.tipo_genero|title }}</td>
                     <td>
                       <div class="btn-group dropright">
                         <button type="button" class="btn btn-sm btn-info">
@@ -67,7 +69,7 @@
                           <span class="sr-only">Toggle Dropright</span>
                         </button>
                         <div class="dropdown-menu">
-                          <!-- <a class="btn " href="{% url 'Cestock:InfoCarnetPaciente' paciente.rut_paciente %}">Info. Carnet</a>
+                           <!-- <a class="btn " href="{% url 'Cestock:InfoCarnetPaciente' paciente.rut_paciente %}">Info. Carnet</a>
                           <a class="btn " href="{% url 'Cestock:InfoPersonalPaciente' paciente.rut_paciente %}">Info. Paciente</a> -->
                           <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoCarnetPaciente' paciente.rut_paciente %}')"> Info. Carnet</button>
                           <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoPersonalPaciente' paciente.rut_paciente %}')">Info. Personal Paciente</button>
@@ -75,7 +77,10 @@
                       </div>
                     </td>
                   </tr>
-                  {% endfor%} {% else %}
+                  {% endif %}
+                  {% endfor%}
+                  {% endfor %}
+                  {% else %}
                   <h2>No Existen Pacientes Registrados.</h2>
                   {% endif %}
                 </tbody>

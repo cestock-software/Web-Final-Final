@@ -45,9 +45,11 @@
                     <th scope="col">ID Atención Médica</th>
                     <th scope="col">Rut Paciente</th>
                     <th scope="col">Nombre Médico</th>
-                    <th scope="col">ID Receta Emitida</th>
                     <th scope="col">Fecha Atención</th>
-                    <th scope="col">Fecha Próx. Atención</th>
+                    <th scope="col">Síntomas</th>
+                    <th scope="col">Diágnostico</th>
+                    <th scope="col">Tratamiento</th>
+                    <th scope="col">Observación</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -55,30 +57,39 @@
                   {% for carnet in carnets %}
                   {% for atencion in atenciones %}
                   {% if atencion.nro_ficha == carnet %}
-                  <!-- {% for receta in recetas %} -->
-                  <!-- {% if receta.id_atencion_medica == atencion %} -->
+                  {% for detalle in detalle_atenciones %}
+                  {% if detalle.atencion_medica == atencion %}
                   <tr>
                     <th scope="row">{{ atencion.id }}</td>
                     <td>{{ carnet.rut_paciente }}</td>
                     <td>{{ atencion.nombre_medico }}</td>
-                    <!-- <td>{{ receta.id_receta_medica }}</td> -->
                     <td>{{ atencion.fecha_atencion_medica }}</td>
-                    {% if atencion.fecha_prox_atencion is None %}
-                    <td>-</td>
-                    {% else %}
-                    <td>{{ atencion.fecha_prox_atencion}}</td>
-                    {% endif %}
+                    <td>{{ detalle.sintomas|title}}</td>
+                    <td>{{ detalle.diagnostico|title}}</td>
+                    <td>{{ detalle.tratamiento|title}}</td>
+                    <td>{{ detalle.observacion|title}}</td>
                     <td>
-                      <button type="button" class="btn btn-sm btn-info" onclick="abrirModal('{% url 'Cestock:InfoMedicamentoRecetado' receta.id_receta_medica %}')"><i class="fas fa-file-prescription"></i> Receta</button>
+                      <div class="btn-group dropright">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="sr-only">Toggle Dropright</span>
+                        </button>
+                        <div class="dropdown-menu">
+                          {% comment %} <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoDetalleAtencion' atencion.id %}')"> Info. Detalle Atención</button> {% endcomment %}
+                          <button class="dropdown-item" onclick="abrirModal('{% url 'Cestock:InfoMedicamentoRecetado' atencion.id %}')">Info. Receta Médica</button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
-                  <!-- {% endif %}
-                  {% endfor %} -->
+                  {% endif %}
+                  {% endfor %}
                   {% endif %}
                   {% endfor %}
                   {% endfor %}
                   {% else %}
-                  <h2>No Existen Atención Registrada.</h2>
+                    <h2>No Existen Atención Registrada.</h2>
                   {% endif %}
                 </tbody>
               </table>

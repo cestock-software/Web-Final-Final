@@ -1,0 +1,166 @@
+{% extends 'Cestock/PaginaPrincipal.html' %} {% load static %} 
+{% load crispy_forms_tags %} 
+{% block css %}
+<style>
+  .textotal {
+    width: 100% !important;
+  }
+  .rojo {
+    color: rgb(252, 2, 2);
+  }
+  .order-form .container {
+    color: #4c4c4c;
+    padding: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  }
+  .con_white {
+    background-color: #fefefe;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;  
+  }
+</style>
+{% endblock css %} 
+{% block titulo %}Crear Receta Médica{% endblock titulo %} 
+
+{% block Pagina %}
+<br>
+<br>
+<div class="container">
+<section class="order-form my-4 mx-4">
+  <div class="container con_white pt-4 rounded-lg">
+    <div class="row">
+      <div class="col-12">
+        <div class="col-md">
+          <h4>
+            <i class="fas fa-file-prescription"></i> Crear receta médica
+          </h4>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <form action="" id="formulario" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="atencion">Nro. Atención</label>
+                  <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      ><i class="fas fa-notes-medical"></i
+                    ></span>
+                  </div>
+                  <select class="form-control" name="atencion" id="atencion" required>
+                    <option value="" selected disabled hidden>---------</option>
+                    {% for atencion in atenciones %}
+                    <option value="{{atencion.0}}">{{atencion.0}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="medicamento">Medicamento</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"
+                        ><i class="fas fa-prescription-bottle"></i
+                        ></span>
+                    </div>
+                    <select class="form-control" name="medicamento" id="medicamento" required>
+                        <option value="" selected disabled hidden>---------</option>
+                        {% for medicamento in medicamentos %}
+                        <option value="{{medicamento.0}}">{{medicamento.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                      <label for="duracion">Cantidad</label>
+                      <input class="form-control" rows= "3" type="number" name="cantidad" placeholder="Cantidad" id="cantidad" required/>
+                    </div>
+                  </div>
+  
+                  <div class="form-group">
+                    <label for="duracion">Duración</label>
+                    <textarea class="form-control" rows= "3" type="text" name="duracion" placeholder="Ingrese la duracion del tratamiento..." id="duracion" required></textarea>
+                  </div>
+  
+                  <div class="form-group">
+                    <label for="frecuencia">Frecuencia</label>
+                    <textarea class="form-control" rows= "3" type="text" name="frecuencia" placeholder="Ingrese la frecuencia del medicamento..." id="frecuencia" required></textarea>
+                  </div>
+  
+                  <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"
+                        ><i class="fas fa-question-circle"></i></span>
+                    </div>
+                    <select class="form-control" name="estado" id="estado" required>
+                        <option value="" selected disabled hidden>---------</option>
+                        {% for estado in estados %}
+                        <option value="{{estado.0}}">{{estado.1}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+    
+                    <input
+                      type="submit"
+                      value="Guardar"
+                      class="btn btn-success d-block mx-auto btn-submit"
+                    />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+    {% endblock Pagina %}
+
+    {% block js %}
+<script type="text/javascript">
+var validated = false;
+      $('#formulario').submit(function(e) {
+        if(validated)
+          return true;
+
+          e.preventDefault();
+          if($('#atencion').val() == '' && $('#medicamento').val() == '' && $('#cantidad').val() == ''  && $('#duracion').val() == '' && $('#frecuencia').val() == '' && $('#estado').val() == '')
+          {
+            console.log('NO TIENE LOS DATOS')
+          }
+          else{
+            console.log('TIENE LOS DATOS');
+            Swal.fire({
+              title: '¡Receta Médica!',
+              type: 'success',
+              text: '¿Quieres crear una receta?',
+              showCloseButton: true,
+              showCancelButton: true,
+              confirmButtonText:'Confirmar',
+              confirmButtonAriaLabel: 'Confirmar',
+              cancelButtonText:'Cancelar',
+              cancelButtonAriaLabel: 'Cancelar',
+            }).then(function(result){
+                 // function when confirm button clicked
+                 if(result.value){
+                    console.log('good');
+                    validated = true;        
+                    $('#formulario').submit();
+                }else if(result.dismiss == 'cancel'){
+                   console.log('cancel');
+                }
+            })
+
+          }
+          return false;
+      });
+</script>
+{% endblock js %}
