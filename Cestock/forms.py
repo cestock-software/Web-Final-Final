@@ -54,15 +54,16 @@ class FormAtencion(forms.ModelForm):
             }),
         }
 
-    def clean_nro_ficha(self):
-            nro_ficha = self.cleaned_data['nro_ficha']
-            fichas = Carnet_Paciente.objects.filter(nro_ficha__iexact=nro_ficha)
-            if self.instance:
-                fichas = fichas.exclude(id=self.instance.id)
-            if fichas.count() is None:
-                raise ValidationError('Lo sentimos, pero esta ficha no existe')
-            else:
-                return nro_ficha
+    # def clean_nro_ficha(self):
+    #         nro_ficha = self.cleaned_data['nro_ficha']
+    #         fichas = Carnet_Paciente.objects.filter(nro_ficha__iexact=nro_ficha)
+    #         if self.instance:
+    #             fichas = fichas.exclude(id=self.instance.id)
+    #         if fichas.count() is None:
+    #             raise ValidationError('Lo sentimos, pero esta ficha no existe')
+    #         else:
+    #             return nro_ficha
+
 
 
 class FormPrescripcion(forms.ModelForm):

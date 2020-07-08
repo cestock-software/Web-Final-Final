@@ -1,17 +1,19 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse,HttpResponseRedirect
+import datetime
+import locale
+import cx_Oracle
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from .forms import *
+from django.db import connection
 from django.utils import timezone
 from django.urls import reverse
 from django.db.models import Count
-from .models import *
 from django.contrib import messages
+from .models import *
+from .forms import *
 from .filters import *
-import datetime
-import locale
 # Create your views here.
 
 
