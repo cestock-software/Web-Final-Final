@@ -218,7 +218,7 @@ def ListaPacientes(request):
     return render(request, "Cestock/ListaPacientes.html", context)
 
 def StockMedicamento(request):
-    medicamentos = Medicamento.objects.all().order_by('id_medicamento')
+    medicamentos = Medicamento.objects.filter(id_estado=1).order_by('id_medicamento')
     formatos = Formato.objects.all()
     unidades = Unidad_medida.objects.all()
     laboratorios = Laboratorio.objects.all()
